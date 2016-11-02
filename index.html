@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player</title>
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+
+            var send_action = function ( $action ) {
+                $.ajax({
+                    'url': 'index.php',
+                    'type': 'post',
+                    'dataType': 'json',
+                    'data': { 'action': $action }
+                }).done(function ( get_json ) {
+                    $('.message').removeClass('error').removeClass('success');
+                    if ( get_json.status == 'error' ) {
+                        $('.message').html( get_json.message ).addClass('error');
+                    } else if ( get_json.status == 'success' ) {
+                        $('.message').html( get_json.message ).addClass('success');
+                    }
+                });
+            };
+
+            $('form').on('click', 'input', function ( e ) {
+                e.preventDefault();
+                send_action( $( this ).val() );
+            });
+
+        });
+    </script>
+    <style>
+        .error {
+            border: 1px solid red;
+        }
+        .success {
+            border: 1px solid green;
+        }
+    </style>
+</head>
+<body>
+<div class="message"></div>
+<form method="post" action="index.php">
+    <input type="submit" value="Start" name="action">
+    <input type="submit" value="Stop" name="action">
+    <input type="submit" value="Pause" name="action">
+    <hr>
+    <input type="submit" value="Record" name="action">
+    <input type="submit" value="RStop" name="action">
+    <input type="submit" value="RPause" name="action">
+</form>
+
+</body>
+</html>
